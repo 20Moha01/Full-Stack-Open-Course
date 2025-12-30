@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const ContactInfo = ({ person }) => (
   <p>
@@ -56,17 +57,18 @@ const FilterByName = ({ value, onChange }) => {
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-    { name: "Mohamed El Kanboui Bouaacha", number: "344-450138", id: 5 },
-    { name: "Ilyas El Kanboui Bouaacha", number: "012-783494", id: 6 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+
+  const fetchPersons = () => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  };
+
+  useEffect(fetchPersons, []);
 
   const handleNewContact = (event) => {
     event.preventDefault();
